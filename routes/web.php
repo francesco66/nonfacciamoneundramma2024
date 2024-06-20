@@ -2,6 +2,9 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+// use GrahamCampbell\Markdown\Facades\Markdown;
+use Parsed\Content;
+use Parsed\ContentParser;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,6 +20,37 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+
+Route::get('/mdma', function () {
+    $articles = [];
+
+    foreach (glob(storage_path('../public/articlesMDMA') . '/*.md') as $file) {
+        $article = new Content(file_get_contents($file));
+        $article->parse(new ContentParser());
+        $articles[] = $article;
+    }
+    return view('mdma', [
+        'articles' => $articles
+    ]);
+});
+
+Route::get('/ndi', function () {
+    $articles = [];
+
+    foreach (glob(storage_path('../public/articlesNDI') . '/*.md') as $file) {
+        $article = new Content(file_get_contents($file));
+        $article->parse(new ContentParser());
+        $articles[] = $article;
+    }
+
+    return view('ndi', [
+        'articles' => $articles
+    ]);
+});
+
+
+Route::view('/chisiamo', 'chisiamo');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
